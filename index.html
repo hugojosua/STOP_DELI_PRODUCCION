@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stop Deli - Fidelización</title>
+    <!-- Tailwind CSS Play CDN para renderizado moderno -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        stopred: {
+                            50: '#fef2f2',
+                            100: '#fee2e2',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            700: '#b91c1c',
+                            800: '#991b1b',
+                            900: '#7f1d1d',
+                            950: '#450a0a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#07090e] text-slate-100 font-sans antialiased min-h-screen selection:bg-red-600 selection:text-white">
+
+    <!-- SELECTOR GLOBAL SUPERIOR -->
+    <header class="bg-[#0b0f19]/90 backdrop-blur-md border-b border-red-950 px-4 sm:px-8 py-3.5 sticky top-0 z-50 shadow-2xl">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            
+            <!-- Logo y Sucursal -->
+            <div class="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-start">
+              <div class="bg-gradient-to-br from-slate-900 to-[#121824] border border-red-900/40 p-2 rounded-2xl shadow-inner flex items-center">
+                  <img src="/logo.png" alt="Stop Deli Logo" class="h-12 sm:h-14 object-contain filter drop-shadow">
+              </div>
+              <div class="bg-slate-900/80 border border-slate-800 px-3.5 py-1.5 rounded-xl shadow-sm">
+                    <label class="text-[10px] uppercase tracking-wider text-red-400 block font-black mb-0.5"><i class="fa-solid fa-location-dot mr-1"></i> Sucursal:</label>
+                    <select id="globalSucursal" class="bg-transparent text-white text-xs sm:text-sm font-bold focus:outline-none cursor-pointer">
+                        <option value="1" class="bg-slate-900 text-white">Valles</option>
+                        <option value="2" class="bg-slate-900 text-white">Quitumbe</option>
+                        <option value="3" class="bg-slate-900 text-white">Recreo</option>
+                        <option value="4" class="bg-slate-900 text-white">Real Audiencia</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Modos de Navegación -->
+            <div class="flex items-center gap-1.5 bg-[#0f1523] p-1.5 rounded-2xl border border-slate-800/80 shadow-inner w-full sm:w-auto justify-center">
+                <button id="btnModeCliente" class="flex-1 sm:flex-initial px-4 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all duration-300 bg-red-600 text-white shadow-lg shadow-red-900/30">
+                    <i class="fa-solid fa-user mr-1.5"></i> App Clientes
+                </button>
+                <button id="btnModeAdmin" class="flex-1 sm:flex-initial px-4 py-2 text-xs sm:text-sm font-bold rounded-xl transition-all duration-300 text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <i class="fa-solid fa-lock mr-1.5"></i> Admin / Caja
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <main class="max-w-7xl mx-auto p-4 sm:p-8">
+
+        <!-- ================= VISTA CLIENTES ================= -->
+        <div id="viewClientes" class="space-y-6">
+            <!-- Auth Cliente -->
+            <div id="authContainerCliente" class="max-w-md mx-auto bg-gradient-to-b from-[#111726] to-[#0d121d] border border-slate-800/80 p-6 sm:p-8 rounded-3xl shadow-2xl shadow-black/55 relative overflow-hidden">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-600 via-rose-500 to-amber-500"></div>
+                
+                <div class="flex bg-slate-950/80 p-1 rounded-2xl border border-slate-800/60 mb-6 shadow-inner">
+                    <button id="tabLogin" class="flex-1 py-2.5 rounded-xl font-bold text-sm transition-all text-white bg-red-600 shadow-md">Iniciar Sesión</button>
+                    <button id="tabRegister" class="flex-1 py-2.5 rounded-xl font-bold text-sm transition-all text-slate-400 hover:text-white">Registrarse</button>
+                </div>
+
+                <!-- Form Login -->
+                <form id="formLoginCliente" class="space-y-4">
+                    <div>
+                        <label class="text-xs font-semibold text-slate-300 block mb-1.5"><i class="fa-solid fa-user-circle text-red-500 mr-1"></i> Nombre de Usuario o Cédula</label>
+                        <input type="text" id="loginUser" required class="w-full bg-[#080c14] border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all placeholder:text-slate-600" placeholder="Ingrese su usuario o cédula">
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-slate-300 block mb-1.5"><i class="fa-solid fa-key text-red-500 mr-1"></i> Contraseña</label>
+                        <input type="password" id="loginPass" required class="w-full bg-[#080c14] border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all placeholder:text-slate-600" placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 font-extrabold py-3.5 rounded-xl transition-all shadow-xl shadow-red-950 text-white text-sm tracking-wide mt-2">Ingresar al Dashboard</button>
+                </form>
+
+                <!-- Form Registro -->
+                <form id="formRegisterCliente" class="space-y-3.5 hidden">
+                    <div>
+                        <label class="text-xs font-semibold text-slate-300 block mb-1">Nombre Completo</label>
+                        <input type="text" id="regNombre" required class="w-full bg-[#080c14] border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all" placeholder="Ej. Juan Pérez">
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-slate-300 block mb-1">Cédula o RUC</label>
+                        <input type="text" id="regCedula" required class="w-full bg-[#080c14] border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all" placeholder="Ej. 1750671578">
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-slate-300 block mb-1">Teléfono</label>
+                        <input type="tel" id="regTelefono" required class="w-full bg-[#080c14] border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all" placeholder="Ej. 0963886928">
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-slate-300 block mb-1">Fecha de Cumpleaños</label>
+                        <input type="date" id="regCumple" required class="w-full bg-[#080c14] border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-slate-300 block mb-1">Contraseña</label>
+                        <input type="password" id="regPass" required class="w-full bg-[#080c14] border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none transition-all" placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 font-extrabold py-3 rounded-xl transition-all shadow-xl shadow-red-950 text-white text-sm tracking-wide mt-2">Registrarme</button>
+                </form>
+            </div>
+
+            <!-- Dashboard Cliente -->
+            <div id="dashboardCliente" class="hidden space-y-6 pb-24 sm:pb-6">
+
+                <!-- Inicio -->
+                <div id="clientViewInicio" class="space-y-6">
+                    <div class="bg-gradient-to-r from-red-950/90 via-[#111726] to-[#0d121d] border border-red-900/40 p-6 sm:p-8 rounded-3xl shadow-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 relative overflow-hidden">
+                        <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-red-600/10 rounded-full blur-3xl pointer-events-none"></div>
+                        <div>
+                            <span class="text-xs uppercase font-black tracking-widest text-red-400 block mb-1">Panel de Socio Stop Deli</span>
+                            <h2 class="text-2xl sm:text-3xl font-black text-white" id="welcomeUserTitle">¡Hola, Cliente!</h2>
+                            <p class="text-sm text-red-200/80 mt-1">Acumula sellos en cada compra superior a $20 y canjea increíbles premios.</p>
+                        </div>
+                        <div class="bg-red-950/60 border border-red-700/60 px-5 py-3 rounded-2xl text-right shadow-inner">
+                            <span class="text-[11px] font-bold text-red-300 uppercase tracking-wide block">Premios Canjeados</span>
+                            <span class="text-3xl font-black text-amber-400" id="lblPremiosObtenidos">0</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-[#111726] border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-2xl">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-6">
+                            <h3 class="font-bold text-lg text-white flex items-center"><div class="w-8 h-8 rounded-xl bg-red-600/20 text-red-500 flex items-center justify-center mr-2.5 shadow-sm"><i class="fa-solid fa-stamp"></i></div> Tarjeta de Sellos (Mínimo $20)</h3>
+                            <span class="text-xs font-black uppercase tracking-wider bg-red-950/80 border border-red-800 text-red-400 px-3 py-1.5 rounded-xl shadow-inner" id="lblSellosCount">0 / 6 Sellos</span>
+                        </div>
+                        <div class="grid grid-cols-3 sm:grid-cols-6 gap-3.5 mb-6" id="sellosGridContainer"></div>
+                        <div class="bg-gradient-to-r from-red-950/60 to-slate-900/60 border border-red-900/50 p-4 sm:p-5 rounded-2xl flex items-center gap-4 shadow-md">
+                            <div class="bg-gradient-to-br from-red-600 to-rose-700 text-white p-3.5 rounded-2xl text-2xl shadow-lg shadow-red-950 flex-shrink-0"><i class="fa-solid fa-gift"></i></div>
+                            <div>
+                                <h4 class="font-black text-white text-sm sm:text-base" id="premioTituloActivo">Ronda de 6 Alitas Gratis</h4>
+                                <p class="text-xs text-red-200/80 mt-0.5" id="premioDescActiva">Completa tus 6 sellos y llévate 6 alitas con salsa a elección.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-[#111726] border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-2xl">
+                        <h3 class="font-bold text-lg text-white mb-4 flex items-center"><div class="w-8 h-8 rounded-xl bg-emerald-600/20 text-emerald-500 flex items-center justify-center mr-2.5 shadow-sm"><i class="fa-brands fa-whatsapp"></i></div> Sucursales WhatsApp</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5" id="whatsappLinksContainer"></div>
+                    </div>
+                </div>
+
+                <!-- Menú Interactivo (Libro / Hojas de Papel de 5 Páginas) -->
+                <div id="clientViewMenu" class="hidden space-y-6 max-w-4xl mx-auto pb-20">
+                    <div class="text-center">
+                        <span class="text-xs uppercase font-black tracking-widest text-red-400 block mb-1">Catálogo Oficial</span>
+                        <h2 class="text-3xl font-black text-white">Menú Stop Deli</h2>
+                        <p class="text-sm text-slate-400 mt-1">Usa los botones o desliza para pasar las 5 páginas como una hoja de papel.</p>
+                    </div>
+
+                    <!-- Contenedor Visor de Menú Interactivo -->
+                    <div class="bg-[#111726] border border-slate-800 p-4 sm:p-6 rounded-3xl shadow-2xl relative overflow-hidden flex flex-col items-center">
+                        
+                        <!-- Indicador de página actual -->
+                        <div class="mb-4 bg-slate-950/80 border border-slate-800 px-4 py-1.5 rounded-full text-xs font-bold text-red-400 shadow-inner">
+                            Página <span id="currentPageNum">1</span> de 5
+                        </div>
+
+                        <!-- Hoja de Menú (Imagen Interactiva con animación) -->
+                        <div class="w-full max-w-2xl bg-[#080c14] border-2 border-red-950/80 rounded-2xl p-3 shadow-2xl overflow-hidden flex items-center justify-center min-h-[450px] sm:min-h-[600px] relative transition-all duration-500">
+                            <img id="menuPageImg" src="/menu/page_1.png" alt="Menú Stop Deli" class="max-w-full h-auto object-contain rounded-xl shadow-lg transition-all duration-300 transform scale-100">
+                        </div>
+
+                        <!-- Controles para pasar página -->
+                        <div class="flex items-center justify-between w-full max-w-2xl mt-6 px-2">
+                            <button onclick="cambiarPaginaMenu(-1)" class="bg-slate-900 hover:bg-red-950 text-white font-extrabold px-5 py-3 rounded-2xl border border-slate-800 hover:border-red-900 transition-all flex items-center gap-2 shadow-lg">
+                                <i class="fa-solid fa-chevron-left text-red-500"></i><span>Anterior</span>
+                            </button>
+                            <!-- 5 Puntos Indicadores -->
+                            <div class="flex gap-2">
+                                <button onclick="irAPaginaMenu(1)" id="dotMenu1" class="w-3 h-3 rounded-full bg-red-600 transition-all"></button>
+                                <button onclick="irAPaginaMenu(2)" id="dotMenu2" class="w-3 h-3 rounded-full bg-slate-800 transition-all"></button>
+                                <button onclick="irAPaginaMenu(3)" id="dotMenu3" class="w-3 h-3 rounded-full bg-slate-800 transition-all"></button>
+                                <button onclick="irAPaginaMenu(4)" id="dotMenu4" class="w-3 h-3 rounded-full bg-slate-800 transition-all"></button>
+                                <button onclick="irAPaginaMenu(5)" id="dotMenu5" class="w-3 h-3 rounded-full bg-slate-800 transition-all"></button>
+                            </div>
+                            <button onclick="cambiarPaginaMenu(1)" class="bg-red-600 hover:bg-red-500 text-white font-extrabold px-5 py-3 rounded-2xl shadow-xl shadow-red-950 transition-all flex items-center gap-2">
+                                <span>Siguiente</span><i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Promos -->
+                <div id="clientViewPromos" class="hidden space-y-6">
+                    <div class="text-center">
+                        <h2 class="text-3xl font-black text-white">Promociones Semanales</h2>
+                        <p class="text-sm text-slate-400 mt-1">Aprovecha nuestros descuentos especiales de la semana.</p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                        <div class="bg-[#111726] border border-slate-800 p-6 rounded-2xl border-l-4 border-red-600 shadow-xl relative overflow-hidden">
+                            <span class="text-[10px] font-black text-red-400 uppercase tracking-widest bg-red-950/60 px-2.5 py-1 rounded-lg">Lunes</span>
+                            <h4 class="font-black text-white text-xl mt-3">2x1 Alitas</h4>
+                            <p class="text-xs text-slate-400 mt-2 leading-relaxed">Pide 12 y llévate la segunda orden completamente gratis.</p>
+                        </div>
+                        <div class="bg-[#111726] border border-slate-800 p-6 rounded-2xl border-l-4 border-red-600 shadow-xl relative overflow-hidden">
+                            <span class="text-[10px] font-black text-red-400 uppercase tracking-widest bg-red-950/60 px-2.5 py-1 rounded-lg">Miércoles</span>
+                            <h4 class="font-black text-white text-xl mt-3">Combo Burguer</h4>
+                            <p class="text-xs text-slate-400 mt-2 leading-relaxed">2 Hamburguesas artesanales + papas + bebidas por $14.99.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Perfil -->
+                <div id="clientViewPerfil" class="hidden space-y-6 max-w-2xl mx-auto">
+                    <div class="bg-[#111726] border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-2xl space-y-5">
+                        <h3 class="font-bold text-lg text-white flex items-center"><div class="w-8 h-8 rounded-xl bg-red-600/20 text-red-500 flex items-center justify-center mr-2.5 shadow-sm"><i class="fa-solid fa-id-card"></i></div> Tus Datos Personales</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm bg-slate-950/60 p-4 rounded-2xl border border-slate-800/80">
+                            <div class="p-2"><span class="text-slate-400 block text-xs font-semibold mb-0.5">Nombre:</span> <span id="perfilNombre" class="font-bold text-white text-base">-</span></div>
+                            <div class="p-2"><span class="text-slate-400 block text-xs font-semibold mb-0.5">Cédula:</span> <span id="perfilCedula" class="font-bold text-white text-base">-</span></div>
+                            <div class="p-2"><span class="text-slate-400 block text-xs font-semibold mb-0.5">Teléfono:</span> <span id="perfilTelefono" class="font-bold text-white text-base">-</span></div>
+                            <div class="p-2"><span class="text-slate-400 block text-xs font-semibold mb-0.5">Cumpleaños:</span> <span id="perfilCumple" class="font-bold text-white text-base">-</span></div>
+                        </div>
+                    </div>
+                    <div class="bg-[#111726] border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-2xl space-y-5">
+                        <h3 class="font-bold text-lg text-white flex items-center"><div class="w-8 h-8 rounded-xl bg-amber-600/20 text-amber-500 flex items-center justify-center mr-2.5 shadow-sm"><i class="fa-solid fa-headset"></i></div> Sugerencias y Reclamos</h3>
+                        <form id="formSugerencia" class="space-y-4">
+                            <div>
+                                <label class="text-xs font-semibold text-slate-300 block mb-1.5">Tipo</label>
+                                <select id="sugTipo" class="w-full bg-[#080c14] border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-red-500 focus:outline-none">
+                                    <option value="sugerencia">Sugerencia</option>
+                                    <option value="reclamo">Reclamo</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-xs font-semibold text-slate-300 block mb-1.5">Mensaje</label>
+                                <textarea id="sugMensaje" rows="3" required class="w-full bg-[#080c14] border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-red-500 focus:outline-none placeholder:text-slate-600" placeholder="Escribe aquí tu comentario o sugerencia..."></textarea>
+                            </div>
+                            <button type="submit" class="bg-red-600 hover:bg-red-500 font-extrabold px-6 py-3 rounded-xl text-white shadow-lg shadow-red-950 text-sm transition-all">Enviar Mensaje</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- BARRA DE NAVEGACIÓN INFERIOR (PIE DE PÁGINA / ESTILO APP MÓVIL) -->
+                <nav class="fixed bottom-0 left-0 right-0 z-40 bg-[#0b0f19]/95 backdrop-blur-xl border-t border-red-950/80 px-3 py-2.5 shadow-2xl">
+                    <div class="max-w-2xl mx-auto flex items-center justify-around gap-1">
+                        <button id="clientTabInicio" class="flex flex-col items-center justify-center flex-1 py-1.5 px-2 rounded-2xl transition-all duration-300 text-red-500 bg-red-950/40 border border-red-900/40 shadow-inner">
+                            <i class="fa-solid fa-house text-lg mb-0.5"></i>
+                            <span class="text-[10px] font-extrabold tracking-tight">Inicio</span>
+                        </button>
+                        <button id="clientTabMenu" class="flex flex-col items-center justify-center flex-1 py-1.5 px-2 rounded-2xl transition-all duration-300 text-slate-400 hover:text-white hover:bg-slate-800/50">
+                            <i class="fa-solid fa-utensils text-lg mb-0.5"></i>
+                            <span class="text-[10px] font-bold tracking-tight">Menú</span>
+                        </button>
+                        <button id="clientTabPromos" class="flex flex-col items-center justify-center flex-1 py-1.5 px-2 rounded-2xl transition-all duration-300 text-slate-400 hover:text-white hover:bg-slate-800/50">
+                            <i class="fa-solid fa-tags text-lg mb-0.5"></i>
+                            <span class="text-[10px] font-bold tracking-tight">Promos</span>
+                        </button>
+                        <button id="clientTabPerfil" class="flex flex-col items-center justify-center flex-1 py-1.5 px-2 rounded-2xl transition-all duration-300 text-slate-400 hover:text-white hover:bg-slate-800/50">
+                            <i class="fa-solid fa-user-gear text-lg mb-0.5"></i>
+                            <span class="text-[10px] font-bold tracking-tight">Perfil</span>
+                        </button>
+                        <button id="btnLogoutCliente" class="flex flex-col items-center justify-center flex-1 py-1.5 px-2 rounded-2xl transition-all duration-300 text-red-400 hover:text-red-300 hover:bg-red-950/60">
+                            <i class="fa-solid fa-right-from-bracket text-lg mb-0.5"></i>
+                            <span class="text-[10px] font-bold tracking-tight">Salir</span>
+                        </button>
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+        <!-- ================= VISTA ADMIN / CAJA ================= -->
+        <div id="viewAdmin" class="hidden space-y-6">
+            <div id="authContainerAdmin" class="max-w-md mx-auto bg-gradient-to-b from-[#111726] to-[#0d121d] border border-slate-800/80 p-6 sm:p-8 rounded-3xl shadow-2xl shadow-black/55 relative overflow-hidden">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-600 via-rose-500 to-amber-500"></div>
+                <div class="text-center mb-6">
+                    <div class="w-12 h-12 bg-red-950/80 border border-red-900 rounded-2xl flex items-center justify-center mx-auto mb-3 text-red-500 text-xl shadow-inner"><i class="fa-solid fa-lock"></i></div>
+                    <h2 class="text-xl font-black text-white">Acceso Admin / Caja</h2>
+                    <p class="text-xs text-slate-400 mt-1">Ingrese la contraseña de administración autorizada.</p>
+                </div>
+                <form id="formLoginAdmin" class="space-y-4">
+                    <div>
+                        <label class="text-xs font-semibold text-slate-300 block mb-1.5">Contraseña de Administrador</label>
+                        <input type="password" id="adminPassInput" required class="w-full bg-[#080c14] border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:border-red-500 focus:outline-none placeholder:text-slate-600" placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 font-extrabold py-3.5 rounded-xl text-white shadow-xl shadow-red-950 text-sm tracking-wide">Ingresar a Caja</button>
+                </form>
+            </div>
+
+            <div id="dashboardAdmin" class="hidden space-y-6">
+                <div class="flex flex-wrap items-center gap-2 bg-[#111726]/80 p-2 rounded-2xl border border-slate-800 shadow-lg">
+                    <button id="adminTabReportes" class="px-4 py-2.5 bg-red-600 text-white rounded-xl font-bold text-xs sm:text-sm shadow-md transition-all"><i class="fa-solid fa-chart-pie mr-1.5"></i> Reportes</button>
+                    <button id="adminTabClientes" class="px-4 py-2.5 bg-transparent text-slate-300 hover:bg-slate-800/60 rounded-xl font-bold text-xs sm:text-sm transition-all"><i class="fa-solid fa-users mr-1.5"></i> Clientes</button>
+                    <button id="adminTabConsumo" class="px-4 py-2.5 bg-transparent text-slate-300 hover:bg-slate-800/60 rounded-xl font-bold text-xs sm:text-sm transition-all"><i class="fa-solid fa-cash-register mr-1.5"></i> Registrar Consumo</button>
+                    <button id="adminTabPremios" class="px-4 py-2.5 bg-transparent text-slate-300 hover:bg-slate-800/60 rounded-xl font-bold text-xs sm:text-sm transition-all"><i class="fa-solid fa-award mr-1.5"></i> Premios</button>
+                    <button id="btnLogoutAdmin" class="ml-auto px-4 py-2.5 bg-red-950/40 border border-red-900/60 text-red-400 hover:bg-red-900 hover:text-white rounded-xl font-bold text-xs sm:text-sm transition-all"><i class="fa-solid fa-right-from-bracket mr-1.5"></i> Salir</button>
+                </div>
+
+                <!-- Reportes -->
+                <div id="adminViewReportes" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                    <div class="bg-[#111726] border border-slate-800 p-6 rounded-3xl shadow-xl">
+                        <span class="text-xs font-semibold text-slate-400 block uppercase tracking-wider">Clientes Sucursal</span>
+                        <span class="text-3xl font-black text-white mt-2 block" id="repTotalClientes">0</span>
+                    </div>
+                    <div class="bg-[#111726] border border-slate-800 p-6 rounded-3xl shadow-xl">
+                        <span class="text-xs font-semibold text-slate-400 block uppercase tracking-wider">Sellos Activos</span>
+                        <span class="text-3xl font-black text-red-500 mt-2 block" id="repSellosActivos">0</span>
+                    </div>
+                    <div class="bg-[#111726] border border-slate-800 p-6 rounded-3xl shadow-xl">
+                        <span class="text-xs font-semibold text-slate-400 block uppercase tracking-wider">Consumo Total</span>
+                        <span class="text-3xl font-black text-emerald-400 mt-2 block" id="repConsumoTotal">$0.00</span>
+                    </div>
+                    <div class="bg-[#111726] border border-slate-800 p-6 rounded-3xl shadow-xl">
+                        <span class="text-xs font-semibold text-slate-400 block uppercase tracking-wider">Premios Entregados</span>
+                        <span class="text-3xl font-black text-amber-400 mt-2 block" id="repPremiosEntregados">0</span>
+                    </div>
+                </div>
+
+                <!-- Clientes Admin -->
+                <div id="adminViewClientes" class="hidden space-y-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-[#111726] p-5 rounded-2xl border border-slate-800">
+                        <h3 class="font-bold text-lg text-white">Listado de Clientes</h3>
+                        <input type="text" id="searchClienteAdmin" placeholder="Buscar por nombre o cédula..." class="w-full sm:w-72 bg-[#080c14] border border-slate-800 rounded-xl px-4 py-2 text-sm text-white focus:border-red-500 focus:outline-none">
+                    </div>
+                    <div class="bg-[#111726] border border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <thead class="bg-slate-950 text-slate-400 border-b border-slate-800 text-xs uppercase tracking-wider">
+                                    <tr>
+                                        <th class="p-4">Nombre</th>
+                                        <th class="p-4">Cédula</th>
+                                        <th class="p-4">Teléfono</th>
+                                        <th class="p-4">Sellos</th>
+                                        <th class="p-4">Premios</th>
+                                        <th class="p-4 text-right">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaClientesAdminBody" class="divide-y divide-slate-800/60"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Registrar Consumo -->
+                <div id="adminViewConsumo" class="hidden max-w-xl mx-auto bg-[#111726] border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-2xl">
+                    <h3 class="font-bold text-lg text-white mb-4 flex items-center"><div class="w-8 h-8 rounded-xl bg-red-600/20 text-red-500 flex items-center justify-center mr-2.5 shadow-sm"><i class="fa-solid fa-receipt"></i></div> Registrar Consumo (Mínimo $20)</h3>
+                    <form id="formConsumoCaja" class="space-y-4">
+                        <div>
+                            <label class="text-xs font-semibold text-slate-300 block mb-1.5">Cédula o RUC</label>
+                            <input type="text" id="cajaCedula" required class="w-full bg-[#080c14] border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:border-red-500 focus:outline-none" placeholder="Cédula del cliente">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-slate-300 block mb-1.5">Monto ($)</label>
+                            <input type="number" step="0.01" min="20" id="cajaMonto" required class="w-full bg-[#080c14] border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:border-red-500 focus:outline-none" placeholder="20.00">
+                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 font-extrabold py-3.5 rounded-xl text-white shadow-xl shadow-red-950 text-sm">Otorgar Sello (+1)</button>
+                    </form>
+                </div>
+
+                <!-- Premios -->
+                <div id="adminViewPremios" class="hidden max-w-xl mx-auto bg-[#111726] border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-2xl">
+                    <h3 class="font-bold text-lg text-white mb-4 flex items-center"><div class="w-8 h-8 rounded-xl bg-amber-600/20 text-amber-500 flex items-center justify-center mr-2.5 shadow-sm"><i class="fa-solid fa-award"></i></div> Configurar Premio Activo</h3>
+                    <form id="formPremioAdmin" class="space-y-4">
+                        <div>
+                            <label class="text-xs font-semibold text-slate-300 block mb-1.5">Título</label>
+                            <input type="text" id="premioTituloInput" required class="w-full bg-[#080c14] border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:border-red-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-slate-300 block mb-1.5">Descripción</label>
+                            <textarea id="premioDescInput" rows="2" required class="w-full bg-[#080c14] border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:border-red-500 focus:outline-none"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 font-extrabold py-3.5 rounded-xl text-white shadow-xl shadow-red-950 text-sm">Actualizar Premio</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Script Vite -->
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
